@@ -1,3 +1,5 @@
+import os
+
 import pytest
 import torch
 
@@ -9,6 +11,11 @@ from mojo_opset.tests.utils import auto_switch_platform
 from mojo_opset.tests.utils import bypass_not_implemented
 
 
+def _set_norm_tle_branch(norm_tle):
+    os.environ["MOJO_TTX_NORM_TLE"] = norm_tle
+
+
+@pytest.mark.parametrize("norm_tle", ["1", "0"], ids=["tle", "fallback"])
 @pytest.mark.parametrize(
     "x, residual, weight",
     [
@@ -24,7 +31,8 @@ from mojo_opset.tests.utils import bypass_not_implemented
 @pytest.mark.parametrize("norm_pos", ["pre", "post"])
 @auto_switch_platform(set_perf=True)
 @bypass_not_implemented
-def test_residual_add_rmsnorm(x, residual, weight, norm_pos, eps):
+def test_residual_add_rmsnorm(x, residual, weight, norm_pos, eps, norm_tle):
+    _set_norm_tle_branch(norm_tle)
     add_norm = MojoResidualAddRMSNorm(
         norm_size=weight.size(0),
         eps=eps,
@@ -35,6 +43,7 @@ def test_residual_add_rmsnorm(x, residual, weight, norm_pos, eps):
     perf(lambda: add_norm(x, residual))  # noqa: F821
 
 
+@pytest.mark.parametrize("norm_tle", ["1", "0"], ids=["tle", "fallback"])
 @pytest.mark.parametrize(
     "x, residual, weight, bias",
     [
@@ -51,7 +60,8 @@ def test_residual_add_rmsnorm(x, residual, weight, norm_pos, eps):
 @pytest.mark.parametrize("norm_pos", ["pre", "post"])
 @auto_switch_platform(set_perf=True)
 @bypass_not_implemented
-def test_residual_add_layernorm(x, residual, weight, bias, norm_pos, eps):
+def test_residual_add_layernorm(x, residual, weight, bias, norm_pos, eps, norm_tle):
+    _set_norm_tle_branch(norm_tle)
     add_norm = MojoResidualAddLayerNorm(
         norm_size=weight.size(0),
         eps=eps,
@@ -63,6 +73,7 @@ def test_residual_add_layernorm(x, residual, weight, bias, norm_pos, eps):
     perf(lambda: add_norm(x, residual))  # noqa: F821
 
 
+@pytest.mark.parametrize("norm_tle", ["1", "0"], ids=["tle", "fallback"])
 @pytest.mark.parametrize(
     "x, weight",
     [
@@ -76,7 +87,8 @@ def test_residual_add_layernorm(x, residual, weight, bias, norm_pos, eps):
 @pytest.mark.parametrize("eps", [1e-5])
 @auto_switch_platform(set_perf=True)
 @bypass_not_implemented
-def test_rmsnorm(x, weight, eps):
+def test_rmsnorm(x, weight, eps, norm_tle):
+    _set_norm_tle_branch(norm_tle)
     rmsnorm = MojoRMSNorm(
         weight.size(0),
         eps,
@@ -88,6 +100,7 @@ def test_rmsnorm(x, weight, eps):
     perf(lambda: rmsnorm(x))  # noqa: F821
 
 
+@pytest.mark.parametrize("norm_tle", ["1", "0"], ids=["tle", "fallback"])
 @pytest.mark.parametrize(
     "x, weight, bias",
     [
@@ -102,7 +115,8 @@ def test_rmsnorm(x, weight, eps):
 @pytest.mark.parametrize("eps", [1e-5])
 @auto_switch_platform(set_perf=True)
 @bypass_not_implemented
-def test_layernorm(x, weight, bias, eps):
+def test_layernorm(x, weight, bias, eps, norm_tle):
+    _set_norm_tle_branch(norm_tle)
     layernorm = MojoLayerNorm(
         norm_size=weight.size(0),
         eps=eps,

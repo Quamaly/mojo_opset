@@ -6,7 +6,9 @@ from .diffution_attention import diffusion_attention_fwd_impl
 from .flash_attention import paged_attention_decode_impl
 from .flash_attention import paged_attention_prefill_impl
 from .fused_add_layernorm import fused_add_layernorm_infer_impl
+from .fused_add_layernorm_tle import fused_add_layernorm_infer_impl as fused_add_layernorm_tle_infer_impl
 from .fused_add_rmsnorm import fused_add_rmsnorm_infer_impl
+from .fused_add_rmsnorm_tle import fused_add_rmsnorm_infer_impl as fused_add_rmsnorm_tle_infer_impl
 from .fused_linear_cross_entropy import fused_linear_cross_entropy_1d_bwd_impl
 from .fused_linear_cross_entropy import fused_linear_cross_entropy_1d_fwd_impl
 from .fused_linear_cross_entropy import fused_linear_cross_entropy_bwd_impl
@@ -19,11 +21,13 @@ from .kv_cache import store_paged_kv_impl
 from .layernorm import layernorm_bwd_impl
 from .layernorm import layernorm_fwd_impl
 from .layernorm import layernorm_infer_impl
+from .layernorm_tle import layernorm_infer_impl as layernorm_tle_infer_impl
 from .lightning_indexer import lightning_indexer_impl
 from .quant import dynamic_quant_impl
 from .rmsnorm import rmsnorm_bwd_impl
 from .rmsnorm import rmsnorm_fwd_impl
 from .rmsnorm import rmsnorm_infer_impl
+from .rmsnorm_tle import rmsnorm_infer_impl as rmsnorm_tle_infer_impl
 from .rope import rot_pos_embed_impl
 from .rope import rope_bwd_impl
 from .rope import rope_fwd_impl
@@ -88,11 +92,15 @@ __all__ = [
     "rmsnorm_bwd_impl",
     "rmsnorm_fwd_impl",
     "rmsnorm_infer_impl",
+    "rmsnorm_tle_infer_impl",
     "layernorm_infer_impl",
+    "layernorm_tle_infer_impl",
     "layernorm_bwd_impl",
     "layernorm_fwd_impl",
     "fused_add_rmsnorm_infer_impl",
+    "fused_add_rmsnorm_tle_infer_impl",
     "fused_add_layernorm_infer_impl",
+    "fused_add_layernorm_tle_infer_impl",
     "rot_pos_embed_impl",
     "rope_bwd_impl",
     "rope_fwd_impl",
